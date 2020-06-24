@@ -124,6 +124,7 @@ Then perform the following commands on the root folder:
 | cluster\_autoscaling | Cluster autoscaling configuration. See [more details](https://cloud.google.com/kubernetes-engine/docs/reference/rest/v1beta1/projects.locations.clusters#clusterautoscaling) | object | `<map>` | no |
 | cluster\_ipv4\_cidr | The IP address range of the kubernetes pods in this cluster. Default is an automatically assigned CIDR. | string | `"null"` | no |
 | cluster\_resource\_labels | The GCE resource labels (a map of key/value pairs) to be applied to the cluster | map(string) | `<map>` | no |
+| config\_connector | (Beta) Whether ConfigConnector is enabled for this cluster. | bool | `"false"` | no |
 | configure\_ip\_masq | Enables the installation of ip masquerading, which is usually no longer required when using aliasied IP addresses. IP masquerading uses a kubectl call, so when you have a private cluster, you will need access to the API server. | string | `"false"` | no |
 | create\_service\_account | Defines if service account specified to run nodes should be created. | bool | `"true"` | no |
 | database\_encryption | Application-layer Secrets Encryption settings. The object format is {state = string, key_name = string}. Valid values of state are: "ENCRYPTED"; "DECRYPTED". key_name is the name of a CloudKMS key. | object | `<list>` | no |
@@ -141,6 +142,8 @@ Then perform the following commands on the root folder:
 | firewall\_inbound\_ports | List of TCP ports for admission/webhook controllers | list(string) | `<list>` | no |
 | firewall\_priority | Priority rule for firewall rules | number | `"1000"` | no |
 | gce\_pd\_csi\_driver | (Beta) Whether this cluster should enable the Google Compute Engine Persistent Disk Container Storage Interface (CSI) Driver. | bool | `"false"` | no |
+| gcloud\_skip\_download | Whether to skip downloading gcloud (assumes gcloud is already available outside the module) | bool | `"true"` | no |
+| gcloud\_upgrade | Whether to upgrade gcloud at runtime | bool | `"false"` | no |
 | grant\_registry\_access | Grants created cluster-specific service account storage.objectViewer role. | bool | `"false"` | no |
 | horizontal\_pod\_autoscaling | Enable horizontal pod autoscaling addon | bool | `"true"` | no |
 | http\_load\_balancing | Enable httpload balancer addon | bool | `"true"` | no |
@@ -235,7 +238,7 @@ The node_pools variable takes the following parameters:
 | auto_repair | Whether the nodes will be automatically repaired | true | Optional |
 | autoscaling | Configuration required by cluster autoscaler to adjust the size of the node pool to the current cluster usage | true | Optional |
 | auto_upgrade | Whether the nodes will be automatically upgraded | true (if cluster is regional) | Optional |
-| disk_size_gb | Size of the disk attached to each node, specified in GB. The smallest allowed disk size is 10GB | 100GB | Optional |
+| disk_size_gb | Size of the disk attached to each node, specified in GB. The smallest allowed disk size is 10GB | 100 | Optional |
 | disk_type | Type of the disk attached to each node (e.g. 'pd-standard' or 'pd-ssd') | pd-standard | Optional |
 | effect | Effect for the taint | | Required |
 | image_type | The image type to use for this node. Note that changing the image type will delete and recreate all nodes in the node pool | COS | Optional |
@@ -297,20 +300,6 @@ In order to operate with the Service Account you must activate the following API
 
 - Compute Engine API - compute.googleapis.com
 - Kubernetes Engine API - container.googleapis.com
-
-## File structure
-The project has the following folders and files:
-
-- /: root folder
-- /examples: Examples for using this module and sub module.
-- /helpers: Helper scripts.
-- /scripts: Scripts for specific tasks on module (see Infrastructure section on this file).
-- /test: Folders with files for testing the module (see Testing section on this file).
-- /main.tf: `main` file for the public module, contains all the resources to create.
-- /variables.tf: Variables for the public cluster module.
-- /output.tf: The outputs for the public cluster module.
-- /README.MD: This file.
-- /modules: Private and beta sub modules.
 
 [terraform-provider-google-beta]: https://github.com/terraform-providers/terraform-provider-google-beta
 [3.0.0]: https://registry.terraform.io/modules/terraform-google-modules/kubernetes-engine/google/3.0.0
